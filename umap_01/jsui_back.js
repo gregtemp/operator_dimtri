@@ -16,41 +16,63 @@ var vx = 0;
 var vy = 0;
 var vradius = 0.1;
 
-
+sketch.fsaa = true;
 // load our dicts
 var tripoints = new Dict();
 tripoints.import_json("tri_points.json")
 var trisimps = new Dict();
 trisimps.import_json("tri_simplices.json")
 
+var all_corners = []
+for (var j = 0; j < trisimps.getkeys().length; j++){
+	var simp = trisimps.get(j.toString());
+	var corns = simp.map(function(element) {
+		return tripoints.get(element.toString());
+	  });
+	all_corners.push([corns[0][0]*2.-1., corns[0][1]*2.-1., 0., corns[1][0]*2.-1., corns[1][1]*2.-1., 0., corns[2][0]*2.-1., corns[2][1]*2.-1.]);
+}
 
-// process arguments
-if (jsarguments.length>1)
-	vfrgb[0] = jsarguments[1]/255.;
-if (jsarguments.length>2)
-	vfrgb[1] = jsarguments[2]/255.;
-if (jsarguments.length>3)
-	vfrgb[2] = jsarguments[3]/255.;
-if (jsarguments.length>4)
-	vbrgb[0] = jsarguments[4]/255.;
-if (jsarguments.length>5)
-	vbrgb[1] = jsarguments[5]/255.;
-if (jsarguments.length>6)
-	vbrgb[2] = jsarguments[6]/255.;
-if (jsarguments.length>7)
-	vradius = jsarguments[1];
-
-
-// var tri_draw_pts = [];
-// for (var i = 0; i <= 746; i ++) {
-// 	tri_draw_pts.push(get_simp_points(i));
-// }
 
 with (sketch) {
     glclearcolor([0., 0., 0., 1.000]);			
     glclear();
 	gllinewidth(1.);
+	glpointsize(3.);
+	glcolor([0.427, 0.843, 1.000, 0.5]);
+	// for (var i = 0; i < tripoints.getkeys().length; i++){
+	// 	glcolor([0.427, 0.843, 1.000, 0.5]);
+	// 	var px = tripoints.get(i.toString())[0] * 2. - 1.;
+	// 	var py = tripoints.get(i.toString())[1] * 2. - 1.;
+	// 	point(px, py);
+	// 	//frametri(tri_coords.slice(0,9));
+	// }
+	for (var j = 0; j < trisimps.getkeys().length; j++){
+		frametri(all_corners[j]);
+	}
 }
+
+
+function init(){
+	
+	with (sketch) {
+    	glclearcolor([0., 0., 0., 1.000]);			
+    	glclear();
+		gllinewidth(1.);
+		glcolor([0.427, 0.843, 1.000, 0.5]);
+		// glpointsize(3.);
+		// for (var i = 0; i < tripoints.getkeys().length; i++){
+		// 	glcolor([0.427, 0.843, 1.000, 0.5]);
+		// 	var px = tripoints.get(i.toString())[0] * 2. - 1.;
+		// 	var py = tripoints.get(i.toString())[1] * 2. - 1.;
+		// 	point(px, py);
+		// //frametri(tri_coords.slice(0,9));
+		// }
+		for (var j = 0; j < trisimps.getkeys().length; j++){
+			frametri(all_corners[j]);
+		}
+	}
+}
+
 
 var tri_coords = [];
 
